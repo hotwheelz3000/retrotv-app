@@ -181,7 +181,6 @@ struct TVSetView: View {
                     center: .center, startRadius: 2, endRadius: 90
                 )
             )
-            Scanlines(spacing: 3, opacity: 0.28)
             if showsLabel {
                 Text(decade.id)
                     .font(Theme.display(30))

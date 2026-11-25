@@ -64,7 +64,6 @@ struct HomeView: View {
                 colors: [Theme.amber.opacity(0.16), Color.clear],
                 center: .top, startRadius: 10, endRadius: 420
             )
-            Scanlines(spacing: 4, opacity: 0.12)
         }
         .ignoresSafeArea()
     }

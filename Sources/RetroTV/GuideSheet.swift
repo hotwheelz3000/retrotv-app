@@ -46,8 +46,6 @@ struct GuideSheet: View {
                         .font(.system(size: 22, weight: .semibold))
                         .foregroundStyle(controller.decade.glow)
                         .shadow(color: controller.decade.glow, radius: 6)
-                    Scanlines(spacing: 2, opacity: 0.3)
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 }
                 .frame(width: 56, height: 56)
 

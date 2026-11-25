@@ -1,1 +1,1 @@
-One cohesive app: MTV Rewind is now the eighth TV set, with the same screen, remote, colors and dial as the decade sets. Switch between any of the eight sets from the dial.
+No scanlines on any TV. MTV Rewind fills the screen when you turn the phone, and its picture, strip and remote sit together with no big gap.

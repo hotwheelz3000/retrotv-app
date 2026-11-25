@@ -263,7 +263,6 @@ struct TuningOverlay: View {
     var body: some View {
         ZStack {
             StaticNoise(cell: 4, brightness: 0.55)
-            Scanlines(spacing: 3, opacity: 0.3)
             VStack(spacing: 6) {
                 Text(decade.id)
                     .font(Theme.display(54))
@@ -289,7 +288,6 @@ struct NoSignalView: View {
     var body: some View {
         ZStack {
             StaticNoise(cell: 6, brightness: 0.25)
-            Scanlines()
             VStack(spacing: 12) {
                 Image(systemName: "antenna.radiowaves.left.and.right.slash")
                     .font(.system(size: 34, weight: .semibold))

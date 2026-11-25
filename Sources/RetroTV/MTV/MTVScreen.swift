@@ -31,42 +31,10 @@ struct MTVScreen: View {
     }
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            Theme.background.ignoresSafeArea()
-            VolumeViewHost()
-                .frame(width: 1, height: 1)
-
-            // One layout for every mode, so turning the phone or going full screen
-            // never reloads the player: the bars and remote just come and go.
-            VStack(spacing: chromeHidden ? 0 : 12) {
-                if !chromeHidden {
-                    topBar
-                }
-                picture
-                    .aspectRatio(chromeHidden ? nil : 16 / 9, contentMode: .fit)
-                    .frame(maxWidth: .infinity, maxHeight: chromeHidden ? .infinity : nil)
-                    .clipShape(RoundedRectangle(cornerRadius: chromeHidden ? 0 : 20, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: chromeHidden ? 0 : 20, style: .continuous)
-                            .strokeBorder(set.glow.opacity(chromeHidden ? 0 : 0.35), lineWidth: 1.5)
-                    )
-                    .shadow(color: set.glow.opacity(chromeHidden ? 0 : 0.3), radius: 24)
-                    .padding(.horizontal, chromeHidden ? 0 : 10)
-                if !chromeHidden {
-                    MTVNowPlayingStrip(player: player)
-                        .padding(.horizontal, 14)
-                    Spacer(minLength: 0)
-                    remote(compact: false)
-                        .padding(.horizontal, 8)
-                        .padding(.bottom, 4)
-                }
-            }
-            .ignoresSafeArea(.all, edges: chromeHidden ? .all : [])
-
-            if chromeHidden {
-                floatingControls
-            }
+        GeometryReader { geo in
+            screen(width: geo.size.width)
         }
+        .ignoresSafeArea(.all, edges: chromeHidden ? .all : [])
         .animation(.spring(response: 0.4, dampingFraction: 0.88), value: chromeHidden)
         .statusBarHidden(true)
         .persistentSystemOverlays(.hidden)
@@ -91,6 +59,46 @@ struct MTVScreen: View {
         }
         .onChange(of: overlayRemote) {
             if overlayRemote { scheduleHide() }
+        }
+    }
+
+    /// One layout for every mode, so turning the phone or going full screen never
+    /// reloads the player: the bars and remote just come and go, and the picture
+    /// goes from 16:9 under the top bar to the whole screen.
+    private func screen(width: CGFloat) -> some View {
+        ZStack(alignment: .topLeading) {
+            Theme.background.ignoresSafeArea()
+            VolumeViewHost()
+                .frame(width: 1, height: 1)
+
+            VStack(spacing: chromeHidden ? 0 : 12) {
+                if !chromeHidden {
+                    topBar
+                    Spacer(minLength: 0)
+                }
+                picture
+                    .frame(maxWidth: .infinity, maxHeight: chromeHidden ? .infinity : nil)
+                    .frame(height: chromeHidden ? nil : (width - 20) * 9 / 16)
+                    .clipShape(RoundedRectangle(cornerRadius: chromeHidden ? 0 : 20, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: chromeHidden ? 0 : 20, style: .continuous)
+                            .strokeBorder(set.glow.opacity(chromeHidden ? 0 : 0.35), lineWidth: 1.5)
+                    )
+                    .shadow(color: set.glow.opacity(chromeHidden ? 0 : 0.3), radius: 24)
+                    .padding(.horizontal, chromeHidden ? 0 : 10)
+                if !chromeHidden {
+                    MTVNowPlayingStrip(player: player)
+                        .padding(.horizontal, 14)
+                    remote(compact: false)
+                        .padding(.horizontal, 8)
+                    Spacer(minLength: 4)
+                }
+            }
+            .ignoresSafeArea(.all, edges: chromeHidden ? .all : [])
+
+            if chromeHidden {
+                floatingControls
+            }
         }
     }
 
@@ -240,7 +248,6 @@ struct MTVScreen: View {
             Color.black
             MTVWebView(state: player)
                 .opacity(player.offline ? 0 : 1)
-            Scanlines(spacing: 3, opacity: 0.1)
 
             // Takes the touches, so YouTube's own overlay never shows. Tap: play or
             // pause (or the remote, when it's hidden). Double-tap: Full. Swipe: next or previous.
