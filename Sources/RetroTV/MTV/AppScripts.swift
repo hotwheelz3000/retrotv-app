@@ -208,7 +208,7 @@ enum AppScripts {
               artist: artist,
               channel: (function () { try { return currentChannel || ''; } catch (e) { return ''; } })(),
               channelName: playlistMode ? 'Your Saved Videos' : (info.name || ''),
-              icon: playlistMode ? '📼' : (info.icon || '📺'),
+              icon: playlistMode ? '📼' : ((info.icon && info.icon.indexOf('<') === -1) ? info.icon : '📺'),
               playing: !!(p && p.getPlayerState && p.getPlayerState() === 1),
               videoId: videoId,
               saved: !!videoId && savedList().some(function (item) {
@@ -251,7 +251,7 @@ enum AppScripts {
                     var info = cfg.info[key] || {};
                     var count = 0;
                     try { count = (allPlaylists[key] || []).length; } catch (e) {}
-                    return { key: key, name: info.name || key, icon: info.icon || '📺', count: count };
+                    return { key: key, name: info.name || key, icon: (info.icon && info.icon.indexOf('<') === -1) ? info.icon : '📺', count: count };
                   })
                 };
               }).filter(function (sec) { return sec.channels.length; });
