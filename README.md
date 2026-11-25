@@ -1,90 +1,26 @@
-# iOS app template (xtool)
+# Retro TV (Unofficial)
 
-A starting point for SwiftUI iOS apps built with [xtool](https://xtool.sh): SwiftPM instead of an Xcode project, and a GitHub Actions workflow that builds an unsigned `.ipa` on every push to `main` and publishes it as the `latest` release.
+An unofficial iPhone app that puts two retro TV sites in one living room: [MyRetroTVs](https://www.myretrotvs.com), the retro TV simulator with seven decades of commercials, music videos, news and cartoons, and [MTV Rewind](https://wantmymtv.org) (I Want My MTV), music videos 24/7.
 
-What's here:
+**Not made by or affiliated with MyRetroTVs or MTV Rewind.** Every TV set, channel and clip comes from those sites and YouTube. If you enjoy MyRetroTVs, [support it](https://www.buymeacoffee.com/myretrotvs).
 
-- `Package.swift`, `xtool.yml`, `Sources/MyApp/`: a placeholder "Hello, world!" SwiftUI app, so the template builds as-is.
-- `MyApp-Info.plist`: the app's shown name and version.
-- `rename-app.sh`: renames the placeholder to your app.
-- `.github/workflows/build-ipa.yml`: lints, builds the `.ipa` on macOS, and publishes it.
-- `Sources/MyApp/swiftgen.yml`, `Sources/MyApp/Resources/`: typed Swift for the app's text (below).
-- `.swiftlint.yml`, `.swift-format`: lint and style rules used by the workflow.
-- `RELEASE_NOTES.md`: shown on the release page and in `source.json`.
-- `.claude/skills/using-xtool/`: a Claude Code skill with xtool reference notes.
+## What's in it
 
-## Start a new app
+- **Living room:** seven drawn TV sets, one per decade from the 50s to the 2010s, an MTV Rewind card, and a "Back to the 80s" card for the last set you watched.
+- **Decade sets:** the native remote (Power, Guide, CH and VOL, Full, Shuffle, Focus, Effects, LED readout, decade dial), the guide, swipe gestures, the Picture & Sound panel, landscape and Focus mode.
+- **MTV Rewind:** the full player in its own colors, with the lavender VHS title: channels, Time Machine, search, saved videos and the remote. The back button returns to the living room.
+- Sound plays with the silent switch on, and MTV Rewind keeps playing with the screen locked.
 
-1. On GitHub, click **Use this template → Create a new repository** (or clone this repo and push it to a new one).
-2. Clone your new repo and rename the app (below).
-3. Commit and push to `main`. The workflow builds your IPA.
-
-## Rename the app
-
-```bash
-./rename-app.sh CoffeeLog com.yourname.CoffeeLog
-```
-
-The first argument is the app name. It becomes a Swift module and type name, so use letters, digits and `_` only (no spaces or hyphens). The second is the bundle ID.
-
-The script updates the names in `Package.swift`, sets `product:`, `bundleID:` and `infoPath:` in `xtool.yml`, renames `Sources/MyApp/` and `MyAppApp.swift`, renames the `MyAppApp` struct, and renames `MyApp-Info.plist` (and the shown name inside it). To show a name with spaces on the home screen, edit `CFBundleDisplayName` in the plist afterwards.
-
-## Versions and build numbers
-
-- **Version:** `CFBundleShortVersionString` in `<AppName>-Info.plist`. Change it by hand for a new version.
-- **Build number:** set by the workflow. It counts the builds of the current version: the first build of a new version is 1, then 2, 3... It goes into `CFBundleVersion` and the app's `BuildInfo.label` ("Version 1.0 (build 3)").
-- **File name:** `MyApp-1.0.ipa` for the first build of a version, then `MyApp-1.0-2.ipa`, `MyApp-1.0-3.ipa`.
-
-## Download the IPA
-
-Every push to `main` replaces the `latest` release. The direct link is:
+## Download
 
 ```
-https://github.com/<owner>/<repo>/releases/download/latest/<AppName>-<version>-<build>.ipa
+https://github.com/hotwheelz3000/retrotv-app/releases/latest
 ```
 
-The release notes and the end of the workflow log show the exact link. Builds run by hand (**Actions → Build IPA → Run workflow**) and builds of other branches don't publish a release; download those from the run page under **Artifacts**.
+The IPA is unsigned. Sign it when installing, for example with Signulous, Sideloadly or AltStore.
 
-The IPA is **unsigned**. Sign it when installing, for example with Signulous, Sideloadly or AltStore, or `xtool install` after `xtool auth login`.
+## Build
 
-## Source feed (source.json)
+Built with [xtool](https://xtool.sh) (SwiftPM, no Xcode project) on GitHub Actions. Every push to `main` builds the IPA and publishes it as the `latest` release. The app icon is drawn by `scripts/make-app-icon.py`.
 
-Each release also has `source.json`, an AltStore-format source listing the latest build:
-
-```
-https://github.com/<owner>/<repo>/releases/download/latest/source.json
-```
-
-Add that URL in a sideloading app that supports sources, and it shows new builds as updates. It only works for public repos.
-
-## Lint
-
-The workflow runs SwiftLint (rules in `.swiftlint.yml`) and swift-format before building. SwiftLint errors (`force_try`, `force_cast`) stop the run; warnings and style notes show up on the run page.
-
-## App text (SwiftGen)
-
-Put the app's text in `Sources/<AppName>/Resources/en.lproj/Localizable.strings`:
-
-```
-"save_button" = "Save";
-```
-
-Build, and use it as `Text(L10n.saveButton)`. A typo in a key is a compile error instead of blank text. Settings are in `Sources/<AppName>/swiftgen.yml`.
-
-## Build speed
-
-The workflow caches Homebrew downloads and SwiftPM's `.build` folder, so later builds only recompile what changed. A new Xcode version on GitHub's runners starts a fresh cache.
-
-## Build locally
-
-With xtool installed ([macOS](https://xtool.sh/documentation/xtooldocs/installation-macos), [Linux/Windows](https://xtool.sh/documentation/xtooldocs/installation-linux)):
-
-```bash
-xtool dev build --ipa   # unsigned IPA at xtool/<AppName>.ipa
-xtool dev               # build, sign and run on a connected device
-```
-
-## Checks before each build
-
-- **JavaScript check:** `scripts/check-js.py` runs `node --check` on every script held in a Swift multi-line string. A syntax error stops the build and points at the Swift file and line.
-- **Dependabot:** `.github/dependabot.yml` opens a pull request each week when the build's GitHub Actions have updates. Merge it to update.
+The code is two targets: `Sources/RetroTV` (the app and the MyRetroTVs sets) and `Sources/MTVRewind` (the MTV Rewind player, opened from the living room through `MTVRewindScreen`).

@@ -1,0 +1,12 @@
+"app_name" = "Retro TV";
+"home_tagline" = "Seven decades of TV, plus MTV Rewind";
+"home_mtv_tagline" = "Music videos 24/7. No ads, no algorithm.";
+"home_resume" = "Pick up where you left off";
+"home_footer" = "Unofficial app. Not made by or affiliated with MyRetroTVs or MTV Rewind.";
+"tv_tuning" = "Tuning in…";
+"tv_offline_title" = "No signal";
+"tv_offline_body" = "Check your connection and try again.";
+"tv_retry" = "Try again";
+"effects_title" = "Picture & Sound";
+"effects_note" = "These switch the TV's own settings. Tap again to switch back.";
+"about_title" = "About";
