@@ -118,7 +118,7 @@ struct ContentView: View {
                 Haptics.click()
                 onClose()
             } label: {
-                Image(systemName: "chevron.left")
+                Image(systemName: "chevron.down")
                     .font(.system(size: 15, weight: .bold))
                     .foregroundStyle(Theme.dim)
                     .frame(width: 34, height: 34)
@@ -128,7 +128,7 @@ struct ContentView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(PressableStyle())
-            .accessibilityLabel("Back to the living room")
+            .accessibilityLabel("Back to all TVs")
             Wordmark(size: 24, alignment: .leading)
             Spacer(minLength: 0)
             Button {
@@ -193,9 +193,11 @@ struct ContentView: View {
             }
 
             if full && showsFloatingRemote {
-                FloatingRemote(player: player, canExit: fullScreen) {
-                    withAnimation(.snappy) { fullScreen = false; showsFloatingRemote = false }
-                }
+                FloatingRemote(
+                    player: player, canExit: fullScreen,
+                    onExit: { withAnimation(.snappy) { fullScreen = false; showsFloatingRemote = false } },
+                    onClose: onClose
+                )
                 .frame(maxHeight: .infinity, alignment: .bottom)
                 .padding(.bottom, Metrics.xl)
                 .transition(.opacity.combined(with: .move(edge: .bottom)))
@@ -413,9 +415,17 @@ private struct FloatingRemote: View {
     let player: PlayerController
     let canExit: Bool
     let onExit: () -> Void
+    /// Back to the living room. Shown in landscape, where the header is hidden.
+    let onClose: () -> Void
 
     var body: some View {
         HStack(spacing: Metrics.md + 4) {
+            if !canExit {
+                RoundButton(symbol: "chevron.down", size: 50, style: .light, label: "Back to all TVs") {
+                    Haptics.click()
+                    onClose()
+                }
+            }
             RoundButton(symbol: "backward.fill", size: 50, style: .light, label: "Previous") {
                 player.previous()
             }
