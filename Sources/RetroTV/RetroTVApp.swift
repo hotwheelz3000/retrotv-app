@@ -1,14 +1,9 @@
 import AVFoundation
-import MTVRewind
 import SwiftUI
 
 @main
 struct RetroTVApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-
-    init() {
-        MTVRewindInfo.buildLabel = BuildInfo.label
-    }
 
     var body: some Scene {
         WindowGroup {

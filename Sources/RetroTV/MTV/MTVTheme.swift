@@ -15,7 +15,7 @@ extension Color {
 /// Colors and type for the whole app: a black background with the site's
 /// MTV Rewind palette (royal blue, lilac, mustard, red, salmon, light blue, and the
 /// Enter button's pink-to-blue gradient), with chunky dark outlines.
-enum Theme {
+enum MTVTheme {
     static let background = Color.black
     static let royal = Color(hex: 0x2F5EB0)
     static let deep = Color(hex: 0x224C8B)
@@ -55,7 +55,7 @@ enum Theme {
 
 /// Small physical clicks for remote buttons.
 @MainActor
-enum Haptics {
+enum MTVHaptics {
     static func click() {
         UIImpactFeedbackGenerator(style: .rigid).impactOccurred(intensity: 0.8)
     }
@@ -70,7 +70,7 @@ enum Haptics {
 }
 
 /// Buttons that sink a little when pressed, like a real remote.
-struct PressableStyle: ButtonStyle {
+struct MTVPressableStyle: ButtonStyle {
     var scale: CGFloat = 0.94
 
     func makeBody(configuration: Configuration) -> some View {
@@ -82,7 +82,7 @@ struct PressableStyle: ButtonStyle {
 }
 
 /// Thin dark lines across the picture, like a CRT.
-struct Scanlines: View {
+struct MTVScanlines: View {
     var spacing: CGFloat = 3
     var opacity: Double = 0.22
 
@@ -108,11 +108,11 @@ struct Outlined: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .shadow(color: Theme.ink, radius: 0, x: width, y: width)
-            .shadow(color: Theme.ink, radius: 0, x: -width, y: -width)
-            .shadow(color: Theme.ink, radius: 0, x: width, y: -width)
-            .shadow(color: Theme.ink, radius: 0, x: -width, y: width)
-            .shadow(color: Theme.ink.opacity(0.9), radius: 0, x: drop, y: drop)
+            .shadow(color: MTVTheme.ink, radius: 0, x: width, y: width)
+            .shadow(color: MTVTheme.ink, radius: 0, x: -width, y: -width)
+            .shadow(color: MTVTheme.ink, radius: 0, x: width, y: -width)
+            .shadow(color: MTVTheme.ink, radius: 0, x: -width, y: width)
+            .shadow(color: MTVTheme.ink.opacity(0.9), radius: 0, x: drop, y: drop)
     }
 }
 
@@ -123,7 +123,7 @@ extension View {
 }
 
 /// The VHS "REWIND" title colors: lavender letters with a dark brown 3D extrusion.
-extension Theme {
+extension MTVTheme {
     static let titleFace = Color(hex: 0xA99CDA)
     static let titleExtrude = Color(hex: 0x3A2A22)
 
@@ -142,15 +142,15 @@ struct VHSTitle: ViewModifier {
         ZStack {
             ForEach((1...max(depth, 1)).reversed(), id: \.self) { step in
                 content
-                    .foregroundStyle(step == depth ? Theme.ink : Theme.titleExtrude)
+                    .foregroundStyle(step == depth ? MTVTheme.ink : MTVTheme.titleExtrude)
                     .offset(x: CGFloat(step), y: CGFloat(step))
             }
             content
-                .foregroundStyle(Theme.titleFace)
-                .shadow(color: Theme.ink, radius: 0, x: 0.8, y: 0.8)
-                .shadow(color: Theme.ink, radius: 0, x: -0.8, y: -0.8)
-                .shadow(color: Theme.ink, radius: 0, x: 0.8, y: -0.8)
-                .shadow(color: Theme.ink, radius: 0, x: -0.8, y: 0.8)
+                .foregroundStyle(MTVTheme.titleFace)
+                .shadow(color: MTVTheme.ink, radius: 0, x: 0.8, y: 0.8)
+                .shadow(color: MTVTheme.ink, radius: 0, x: -0.8, y: -0.8)
+                .shadow(color: MTVTheme.ink, radius: 0, x: 0.8, y: -0.8)
+                .shadow(color: MTVTheme.ink, radius: 0, x: -0.8, y: 0.8)
         }
     }
 }
@@ -169,11 +169,11 @@ struct Wordmark: View {
     var body: some View {
         VStack(alignment: alignment, spacing: -size * 0.12) {
             Text("MTV")
-                .font(Theme.title(size * 0.8))
+                .font(MTVTheme.title(size * 0.8))
                 .tracking(2)
                 .vhsTitle(depth: max(2, Int(size / 10)))
             Text("REWIND")
-                .font(Theme.title(size * 1.15))
+                .font(MTVTheme.title(size * 1.15))
                 .tracking(1.5)
                 .vhsTitle(depth: max(3, Int(size / 6)))
         }

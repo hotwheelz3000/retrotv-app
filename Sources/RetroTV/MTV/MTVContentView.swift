@@ -23,7 +23,7 @@ enum Metrics {
     static let minTap: CGFloat = 44
 }
 
-struct ContentView: View {
+struct MTVContentView: View {
     /// Back to the Retro TV living room.
     var onClose: () -> Void = {}
 
@@ -41,7 +41,7 @@ struct ContentView: View {
             let screenWidth = columnWidth - Metrics.gutter * 2
             ZStack {
                 Color.clear.onChange(of: geo.size) { player.relayout() }
-                Theme.background.ignoresSafeArea()
+                MTVTheme.background.ignoresSafeArea()
 
                 VStack(spacing: 0) {
                     if !full {
@@ -61,7 +61,7 @@ struct ContentView: View {
                         .clipShape(RoundedRectangle(cornerRadius: full ? 0 : Metrics.screenRadius, style: .continuous))
                         .overlay(
                             RoundedRectangle(cornerRadius: full ? 0 : Metrics.screenRadius, style: .continuous)
-                                .strokeBorder(Theme.royal.opacity(full ? 0 : 0.55), lineWidth: 1)
+                                .strokeBorder(MTVTheme.royal.opacity(full ? 0 : 0.55), lineWidth: 1)
                                 .allowsHitTesting(false)
                         )
 
@@ -107,7 +107,7 @@ struct ContentView: View {
             case .timeMachine: TimeMachineSheet(player: player)
             case .search: SearchSheet(player: player)
             case .saved: SavedSheet(player: player)
-            case .about: AboutView()
+            case .about: MTVAboutView()
             }
         }
     }
@@ -115,36 +115,36 @@ struct ContentView: View {
     private var header: some View {
         HStack(alignment: .center, spacing: Metrics.md) {
             Button {
-                Haptics.click()
+                MTVHaptics.click()
                 onClose()
             } label: {
                 Image(systemName: "chevron.down")
                     .font(.system(size: 15, weight: .bold))
-                    .foregroundStyle(Theme.dim)
+                    .foregroundStyle(MTVTheme.dim)
                     .frame(width: 34, height: 34)
-                    .background(Circle().fill(Theme.navy))
-                    .overlay(Circle().strokeBorder(Theme.royal.opacity(0.6), lineWidth: 1))
+                    .background(Circle().fill(MTVTheme.navy))
+                    .overlay(Circle().strokeBorder(MTVTheme.royal.opacity(0.6), lineWidth: 1))
                     .frame(width: Metrics.minTap, height: Metrics.minTap)
                     .contentShape(Rectangle())
             }
-            .buttonStyle(PressableStyle())
+            .buttonStyle(MTVPressableStyle())
             .accessibilityLabel("Back to all TVs")
             Wordmark(size: 24, alignment: .leading)
             Spacer(minLength: 0)
             Button {
-                Haptics.click()
+                MTVHaptics.click()
                 sheet = .about
             } label: {
                 Image(systemName: "info")
                     .font(.system(size: 15, weight: .bold))
-                    .foregroundStyle(Theme.dim)
+                    .foregroundStyle(MTVTheme.dim)
                     .frame(width: 34, height: 34)
-                    .background(Circle().fill(Theme.navy))
-                    .overlay(Circle().strokeBorder(Theme.royal.opacity(0.6), lineWidth: 1))
+                    .background(Circle().fill(MTVTheme.navy))
+                    .overlay(Circle().strokeBorder(MTVTheme.royal.opacity(0.6), lineWidth: 1))
                     .frame(width: Metrics.minTap, height: Metrics.minTap)
                     .contentShape(Rectangle())
             }
-            .buttonStyle(PressableStyle())
+            .buttonStyle(MTVPressableStyle())
             .accessibilityLabel("About MTV Rewind")
         }
     }
@@ -152,15 +152,15 @@ struct ContentView: View {
     /// The video, with swipe and tap on top (the site's own page stays hidden underneath).
     private func screen(full: Bool) -> some View {
         ZStack {
-            WebView(state: player)
-            Scanlines(spacing: 3, opacity: 0.1)
+            MTVWebView(state: player)
+            MTVScanlines(spacing: 3, opacity: 0.1)
 
             // Takes the touches, so YouTube's own overlay never shows.
             Color.clear
                 .contentShape(Rectangle())
                 .onTapGesture(count: 2) {
                     guard !full || fullScreen else { return }
-                    Haptics.click()
+                    MTVHaptics.click()
                     withAnimation(.snappy) { fullScreen.toggle() }
                 }
                 .onTapGesture {
@@ -180,8 +180,8 @@ struct ContentView: View {
 
             if let toast = player.toast {
                 Text(toast)
-                    .font(Theme.label(13, weight: .bold))
-                    .foregroundStyle(Theme.text)
+                    .font(MTVTheme.label(13, weight: .bold))
+                    .foregroundStyle(MTVTheme.text)
                     .padding(.horizontal, Metrics.md)
                     .padding(.vertical, Metrics.sm)
                     .background(.ultraThinMaterial, in: Capsule())
@@ -228,28 +228,31 @@ private struct NowPlayingCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Metrics.sm) {
-            Button(action: { Haptics.click(); onChannel() }) {
+            Button {
+                MTVHaptics.click()
+                onChannel()
+            } label: {
                 HStack(spacing: Metrics.sm) {
                     Circle()
-                        .fill(player.now.playing ? Theme.red : Theme.dim)
+                        .fill(player.now.playing ? MTVTheme.red : MTVTheme.dim)
                         .frame(width: 6, height: 6)
-                        .shadow(color: Theme.red, radius: player.now.playing ? 3 : 0)
+                        .shadow(color: MTVTheme.red, radius: player.now.playing ? 3 : 0)
                     Text(channelLabel)
-                        .font(Theme.led(11))
+                        .font(MTVTheme.led(11))
                         .tracking(0.5)
-                        .foregroundStyle(Theme.yellow)
+                        .foregroundStyle(MTVTheme.yellow)
                         .lineLimit(1)
                     Image(systemName: "chevron.down")
                         .font(.system(size: 9, weight: .heavy))
-                        .foregroundStyle(Theme.dim)
+                        .foregroundStyle(MTVTheme.dim)
                 }
                 .padding(.horizontal, Metrics.md - 4)
                 .frame(minHeight: 30)
-                .background(Capsule().fill(Theme.navy).overlay(Capsule().strokeBorder(Theme.deep, lineWidth: 1)))
+                .background(Capsule().fill(MTVTheme.navy).overlay(Capsule().strokeBorder(MTVTheme.deep, lineWidth: 1)))
                 .frame(minHeight: Metrics.minTap)
                 .contentShape(Rectangle())
             }
-            .buttonStyle(PressableStyle())
+            .buttonStyle(MTVPressableStyle())
             .accessibilityLabel("Channel: \(channelName)")
             .accessibilityHint("Opens the channel list")
 
@@ -257,15 +260,15 @@ private struct NowPlayingCard: View {
                 if hasSong {
                     VStack(alignment: .leading, spacing: Metrics.xs) {
                         Text(player.now.title)
-                            .font(Theme.display(26))
-                            .foregroundStyle(Theme.text)
+                            .font(MTVTheme.display(26))
+                            .foregroundStyle(MTVTheme.text)
                             .outlined(1, drop: 2)
                             .lineLimit(2)
                             .minimumScaleFactor(0.75)
                             .fixedSize(horizontal: false, vertical: true)
                         Text(player.now.artist.isEmpty ? " " : player.now.artist)
-                            .font(Theme.label(17, weight: .bold))
-                            .foregroundStyle(Theme.salmon)
+                            .font(MTVTheme.label(17, weight: .bold))
+                            .foregroundStyle(MTVTheme.salmon)
                             .lineLimit(1)
                     }
                     .id(player.now.videoId)
@@ -307,7 +310,7 @@ private struct SkeletonLines: View {
             Capsule().frame(width: 230, height: 22)
             Capsule().frame(width: 140, height: 14)
         }
-        .foregroundStyle(Theme.navy)
+        .foregroundStyle(MTVTheme.navy)
         .opacity(pulse ? 1 : 0.55)
         .animation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true), value: pulse)
         .onAppear { pulse = true }
@@ -342,7 +345,7 @@ private struct Remote: View {
             .padding(.top, Metrics.xs)
 
             HStack(spacing: Metrics.sm) {
-                PillButton(
+                MTVPillButton(
                     symbol: player.now.saved ? "heart.fill" : "heart",
                     title: player.now.saved ? "Saved" : "Save",
                     highlighted: player.now.saved
@@ -352,50 +355,50 @@ private struct Remote: View {
                     ShareLink(item: url, subject: Text(shareText), message: Text(shareText)) {
                         PillLabel(symbol: "square.and.arrow.up", title: "Share")
                     }
-                    .buttonStyle(PressableStyle(scale: 0.95))
-                    .simultaneousGesture(TapGesture().onEnded { Haptics.click() })
+                    .buttonStyle(MTVPressableStyle(scale: 0.95))
+                    .simultaneousGesture(TapGesture().onEnded { MTVHaptics.click() })
                     .accessibilityLabel("Share this video")
                 } else {
-                    PillButton(symbol: "square.and.arrow.up", title: "Share") {}
+                    MTVPillButton(symbol: "square.and.arrow.up", title: "Share") {}
                         .disabled(true)
                         .opacity(0.5)
                 }
-                PillButton(symbol: "exclamationmark.arrow.triangle.2.circlepath", title: "Skip") {
+                MTVPillButton(symbol: "exclamationmark.arrow.triangle.2.circlepath", title: "Skip") {
                     player.skip()
                 }
                 .accessibilityLabel("Skip a video that won't play")
-                PillButton(symbol: "arrow.up.left.and.arrow.down.right", title: "Full") {
-                    Haptics.click()
+                MTVPillButton(symbol: "arrow.up.left.and.arrow.down.right", title: "Full") {
+                    MTVHaptics.click()
                     onFull()
                 }
                 .accessibilityLabel("Full screen")
             }
 
             Rectangle()
-                .fill(Theme.royal.opacity(0.35))
+                .fill(MTVTheme.royal.opacity(0.35))
                 .frame(height: 1)
                 .accessibilityHidden(true)
 
             Grid(horizontalSpacing: Metrics.sm, verticalSpacing: Metrics.sm) {
                 GridRow {
-                    BigTile(symbol: "tv", title: "Channels", tint: Theme.sky) { open(.channels) }
-                    BigTile(symbol: "clock.arrow.circlepath", title: "Time Machine", tint: Theme.yellow) {
+                    BigTile(symbol: "tv", title: "Channels", tint: MTVTheme.sky) { open(.channels) }
+                    BigTile(symbol: "clock.arrow.circlepath", title: "Time Machine", tint: MTVTheme.yellow) {
                         open(.timeMachine)
                     }
                 }
                 GridRow {
-                    BigTile(symbol: "magnifyingglass", title: "Search", tint: Theme.pink) { open(.search) }
-                    BigTile(symbol: "heart.text.square", title: "Saved", tint: Theme.salmon) { open(.saved) }
+                    BigTile(symbol: "magnifyingglass", title: "Search", tint: MTVTheme.pink) { open(.search) }
+                    BigTile(symbol: "heart.text.square", title: "Saved", tint: MTVTheme.salmon) { open(.saved) }
                 }
             }
         }
         .padding(Metrics.md + 4)
         .background(
             RoundedRectangle(cornerRadius: Metrics.cardRadius, style: .continuous)
-                .fill(LinearGradient(colors: [Theme.deep, Theme.navy], startPoint: .top, endPoint: .bottom))
+                .fill(LinearGradient(colors: [MTVTheme.deep, MTVTheme.navy], startPoint: .top, endPoint: .bottom))
                 .overlay(
                     RoundedRectangle(cornerRadius: Metrics.cardRadius, style: .continuous)
-                        .strokeBorder(Theme.royal, lineWidth: 1.5)
+                        .strokeBorder(MTVTheme.royal, lineWidth: 1.5)
                 )
         )
     }
@@ -405,7 +408,7 @@ private struct Remote: View {
     }
 
     private func open(_ which: AppSheet) {
-        Haptics.click()
+        MTVHaptics.click()
         sheet = which
     }
 }
@@ -422,7 +425,7 @@ private struct FloatingRemote: View {
         HStack(spacing: Metrics.md + 4) {
             if !canExit {
                 RoundButton(symbol: "chevron.down", size: 50, style: .light, label: "Back to all TVs") {
-                    Haptics.click()
+                    MTVHaptics.click()
                     onClose()
                 }
             }
@@ -441,7 +444,7 @@ private struct FloatingRemote: View {
                     symbol: "arrow.down.right.and.arrow.up.left", size: 50, style: .light,
                     label: "Exit full screen"
                 ) {
-                    Haptics.click()
+                    MTVHaptics.click()
                     onExit()
                 }
             }
@@ -466,7 +469,7 @@ struct RoundButton: View {
         Button(action: action) {
             Image(systemName: symbol)
                 .font(.system(size: size * 0.34, weight: .heavy))
-                .foregroundStyle(style == .enter ? Theme.text : Theme.ink)
+                .foregroundStyle(style == .enter ? MTVTheme.text : MTVTheme.ink)
                 .contentTransition(.symbolEffect(.replace))
                 .offset(x: symbol == "play.fill" ? size * 0.03 : 0)
                 .frame(width: size, height: size)
@@ -475,7 +478,7 @@ struct RoundButton: View {
                 .frame(minWidth: Metrics.minTap, minHeight: Metrics.minTap)
                 .contentShape(Circle())
         }
-        .buttonStyle(PressableStyle(scale: 0.92))
+        .buttonStyle(MTVPressableStyle(scale: 0.92))
         .accessibilityLabel(label)
     }
 
@@ -485,16 +488,16 @@ struct RoundButton: View {
         switch style {
         case .enter:
             Circle()
-                .fill(Theme.enter)
-                .overlay(Circle().strokeBorder(Theme.yellow, lineWidth: size * 0.07))
-                .overlay(Circle().strokeBorder(Theme.ink, lineWidth: 2))
-                .background(Circle().fill(Theme.purple).offset(y: 4))
-                .background(Circle().strokeBorder(Theme.ink, lineWidth: 2).offset(y: 4))
+                .fill(MTVTheme.enter)
+                .overlay(Circle().strokeBorder(MTVTheme.yellow, lineWidth: size * 0.07))
+                .overlay(Circle().strokeBorder(MTVTheme.ink, lineWidth: 2))
+                .background(Circle().fill(MTVTheme.purple).offset(y: 4))
+                .background(Circle().strokeBorder(MTVTheme.ink, lineWidth: 2).offset(y: 4))
         case .light:
             Circle()
-                .fill(Theme.lightBlue)
-                .overlay(Circle().strokeBorder(Theme.ink, lineWidth: 2))
-                .background(Circle().fill(Theme.ink).offset(y: 3))
+                .fill(MTVTheme.lightBlue)
+                .overlay(Circle().strokeBorder(MTVTheme.ink, lineWidth: 2))
+                .background(Circle().fill(MTVTheme.ink).offset(y: 3))
         }
     }
 }
@@ -511,25 +514,25 @@ struct PillLabel: View {
                 .frame(height: 20)
                 .contentTransition(.symbolEffect(.replace))
             Text(title)
-                .font(Theme.label(11, weight: .bold))
+                .font(MTVTheme.label(11, weight: .bold))
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
         }
-        .foregroundStyle(highlighted ? Theme.ink : Theme.text)
+        .foregroundStyle(highlighted ? MTVTheme.ink : MTVTheme.text)
         .frame(maxWidth: .infinity, minHeight: 56)
         .background(
             RoundedRectangle(cornerRadius: Metrics.controlRadius - 2, style: .continuous)
-                .fill(highlighted ? Theme.salmon : Theme.navy)
+                .fill(highlighted ? MTVTheme.salmon : MTVTheme.navy)
                 .overlay(
                     RoundedRectangle(cornerRadius: Metrics.controlRadius - 2, style: .continuous)
-                        .strokeBorder(highlighted ? Theme.ink : Theme.royal.opacity(0.6), lineWidth: 1)
+                        .strokeBorder(highlighted ? MTVTheme.ink : MTVTheme.royal.opacity(0.6), lineWidth: 1)
                 )
         )
         .contentShape(RoundedRectangle(cornerRadius: Metrics.controlRadius - 2, style: .continuous))
     }
 }
 
-struct PillButton: View {
+struct MTVPillButton: View {
     let symbol: String
     let title: String
     var highlighted = false
@@ -539,7 +542,7 @@ struct PillButton: View {
         Button(action: action) {
             PillLabel(symbol: symbol, title: title, highlighted: highlighted)
         }
-        .buttonStyle(PressableStyle(scale: 0.95))
+        .buttonStyle(MTVPressableStyle(scale: 0.95))
     }
 }
 
@@ -557,28 +560,28 @@ private struct BigTile: View {
                     .foregroundStyle(tint)
                     .frame(width: 24)
                 Text(title)
-                    .font(Theme.label(15, weight: .bold))
-                    .foregroundStyle(Theme.text)
+                    .font(MTVTheme.label(15, weight: .bold))
+                    .foregroundStyle(MTVTheme.text)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
                 Spacer(minLength: 0)
                 Image(systemName: "chevron.right")
                     .font(.system(size: 11, weight: .bold))
-                    .foregroundStyle(Theme.dim)
+                    .foregroundStyle(MTVTheme.dim)
             }
             .padding(.horizontal, Metrics.md - 2)
             .frame(maxWidth: .infinity, minHeight: 56)
             .background(
                 RoundedRectangle(cornerRadius: Metrics.controlRadius, style: .continuous)
-                    .fill(Theme.navy)
+                    .fill(MTVTheme.navy)
                     .overlay(
                         RoundedRectangle(cornerRadius: Metrics.controlRadius, style: .continuous)
-                            .strokeBorder(Theme.royal.opacity(0.6), lineWidth: 1)
+                            .strokeBorder(MTVTheme.royal.opacity(0.6), lineWidth: 1)
                     )
             )
             .contentShape(RoundedRectangle(cornerRadius: Metrics.controlRadius, style: .continuous))
         }
-        .buttonStyle(PressableStyle(scale: 0.97))
+        .buttonStyle(MTVPressableStyle(scale: 0.97))
         .accessibilityHint("Opens \(title)")
     }
 }
@@ -589,13 +592,13 @@ private struct BigTile: View {
 private struct LoadingView: View {
     var body: some View {
         ZStack {
-            Theme.background.ignoresSafeArea()
+            MTVTheme.background.ignoresSafeArea()
             VStack(spacing: Metrics.lg) {
                 AppIconImage(size: 112)
-                    .shadow(color: Theme.royal.opacity(0.35), radius: 24, y: 8)
+                    .shadow(color: MTVTheme.royal.opacity(0.35), radius: 24, y: 8)
                 Wordmark(size: 26)
                 ProgressView()
-                    .tint(Theme.pink)
+                    .tint(MTVTheme.pink)
                     .controlSize(.regular)
                     .padding(.top, Metrics.sm)
             }
@@ -611,28 +614,28 @@ private struct OfflineView: View {
 
     var body: some View {
         ZStack {
-            Theme.background.ignoresSafeArea()
+            MTVTheme.background.ignoresSafeArea()
             VStack(spacing: Metrics.md) {
                 AppIconImage(size: 96)
                     .opacity(0.6)
                     .padding(.bottom, Metrics.sm)
                 Text(L10n.offlineTitle)
-                    .font(Theme.display(22))
-                    .foregroundStyle(Theme.text)
+                    .font(MTVTheme.display(22))
+                    .foregroundStyle(MTVTheme.text)
                 Text(L10n.offlineMessage)
-                    .font(Theme.label(15))
+                    .font(MTVTheme.label(15))
                     .multilineTextAlignment(.center)
-                    .foregroundStyle(Theme.dim)
+                    .foregroundStyle(MTVTheme.dim)
                     .fixedSize(horizontal: false, vertical: true)
                 Button(action: retry) {
                     Text(L10n.retry)
-                        .font(Theme.label(17, weight: .bold))
+                        .font(MTVTheme.label(17, weight: .bold))
                         .frame(minWidth: 140, minHeight: 50)
-                        .background(Theme.enter, in: Capsule())
-                        .overlay(Capsule().strokeBorder(Theme.yellow, lineWidth: 3))
+                        .background(MTVTheme.enter, in: Capsule())
+                        .overlay(Capsule().strokeBorder(MTVTheme.yellow, lineWidth: 3))
                         .foregroundStyle(Color.white)
                 }
-                .buttonStyle(PressableStyle())
+                .buttonStyle(MTVPressableStyle())
                 .padding(.top, Metrics.sm)
             }
             .frame(maxWidth: 360)

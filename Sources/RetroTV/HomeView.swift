@@ -1,4 +1,3 @@
-import MTVRewind
 import SwiftUI
 
 /// The living room: all seven TV sets to pick from, plus the MTV Rewind channel.

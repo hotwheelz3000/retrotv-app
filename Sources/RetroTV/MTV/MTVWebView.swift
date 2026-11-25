@@ -2,7 +2,7 @@ import SwiftUI
 import UIKit
 import WebKit
 
-struct WebView: UIViewRepresentable {
+struct MTVWebView: UIViewRepresentable {
     let state: PlayerController
 
     func makeCoordinator() -> Coordinator {
@@ -175,9 +175,8 @@ struct WebView: UIViewRepresentable {
             guard isMainFrame else { return .allow }
 
             // Links you tap that leave the site (YouTube, IMVDb) open in Safari or their app.
-            if !isInternal(url)
-                && (navigationAction.targetFrame == nil || navigationAction.navigationType == .linkActivated)
-            {
+            let leavesSite = navigationAction.targetFrame == nil || navigationAction.navigationType == .linkActivated
+            if !isInternal(url) && leavesSite {
                 openExternally(url)
                 return .cancel
             }

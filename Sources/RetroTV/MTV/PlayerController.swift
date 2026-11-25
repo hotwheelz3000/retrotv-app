@@ -92,35 +92,35 @@ final class PlayerController {
 
     // MARK: Remote
 
-    func next() { Haptics.click(); run("window.__app.next()") }
-    func previous() { Haptics.click(); run("window.__app.previous()") }
-    func playPause() { Haptics.click(); now.playing.toggle(); run("window.__app.playPause()") }
+    func next() { MTVHaptics.click(); run("window.__app.next()") }
+    func previous() { MTVHaptics.click(); run("window.__app.previous()") }
+    func playPause() { MTVHaptics.click(); now.playing.toggle(); run("window.__app.playPause()") }
 
     func skip() {
-        Haptics.click()
+        MTVHaptics.click()
         show("Skipping…")
         run("window.__app.skip()")
     }
 
     func tune(_ channel: Channel) {
-        Haptics.thunk()
+        MTVHaptics.thunk()
         show("\(channel.icon) \(channel.name)")
         run("window.__app.channel(\(literal(channel.key)))")
     }
 
     func tune(year: Int) {
-        Haptics.thunk()
+        MTVHaptics.thunk()
         show("📅 MTV \(year)")
         run("window.__app.year(\(year))")
     }
 
     func play(_ track: Track) {
-        Haptics.click()
+        MTVHaptics.click()
         run("window.__app.play(\(literal(track.id)))")
     }
 
     func toggleSave() {
-        Haptics.click()
+        MTVHaptics.click()
         Task {
             let added = await value("window.__app.save()") as? Bool ?? false
             show(added ? "♥ Saved" : "Removed from saved")
@@ -128,8 +128,8 @@ final class PlayerController {
         }
     }
 
-    func playSaved(at index: Int) { Haptics.click(); run("window.__app.playSaved(\(index))") }
-    func playAllSaved() { Haptics.thunk(); run("window.__app.playAll()") }
+    func playSaved(at index: Int) { MTVHaptics.click(); run("window.__app.playSaved(\(index))") }
+    func playAllSaved() { MTVHaptics.thunk(); run("window.__app.playAll()") }
     func removeSaved(at index: Int) { run("window.__app.remove(\(index))") }
 
     // MARK: Lists for the sheets
@@ -202,7 +202,7 @@ final class PlayerController {
     /// A JavaScript string literal for `text`.
     private func literal(_ text: String) -> String {
         let data = (try? JSONSerialization.data(withJSONObject: [text])) ?? Data("[\"\"]".utf8)
-        let array = String(decoding: data, as: UTF8.self)
+        let array = String(bytes: data, encoding: .utf8) ?? "[\"\"]"
         return String(array.dropFirst().dropLast())
     }
 }

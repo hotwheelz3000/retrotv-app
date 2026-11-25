@@ -12,21 +12,21 @@ private struct SheetFrame<Content: View>: View {
             content
                 .environment(\.defaultMinListRowHeight, 52)
                 .scrollContentBackground(.hidden)
-                .background(Theme.background.ignoresSafeArea())
+                .background(MTVTheme.background.ignoresSafeArea())
                 .navigationTitle(title)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .confirmationAction) {
                         Button("Done") { dismiss() }
-                            .font(Theme.label(16, weight: .bold))
-                            .tint(Theme.pink)
+                            .font(MTVTheme.label(16, weight: .bold))
+                            .tint(MTVTheme.pink)
                     }
                 }
         }
         .presentationDetents(detents)
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(Metrics.cardRadius + 4)
-        .presentationBackground(Theme.background)
+        .presentationBackground(MTVTheme.background)
         .preferredColorScheme(.dark)
     }
 }
@@ -39,13 +39,13 @@ private struct Placeholder: View {
         VStack(spacing: Metrics.md) {
             Image(systemName: symbol)
                 .font(.system(size: 26, weight: .semibold))
-                .foregroundStyle(Theme.dim)
+                .foregroundStyle(MTVTheme.dim)
                 .frame(width: 64, height: 64)
-                .background(Circle().fill(Theme.navy))
-                .overlay(Circle().strokeBorder(Theme.royal.opacity(0.5), lineWidth: 1))
+                .background(Circle().fill(MTVTheme.navy))
+                .overlay(Circle().strokeBorder(MTVTheme.royal.opacity(0.5), lineWidth: 1))
             Text(text)
-                .font(Theme.label(15))
-                .foregroundStyle(Theme.dim)
+                .font(MTVTheme.label(15))
+                .foregroundStyle(MTVTheme.dim)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -75,18 +75,18 @@ struct ChannelsSheet: View {
                                 }
                             } header: {
                                 Text(section.name.uppercased())
-                                    .font(Theme.led(11))
+                                    .font(MTVTheme.led(11))
                                     .tracking(0.6)
-                                    .foregroundStyle(Theme.yellow)
+                                    .foregroundStyle(MTVTheme.yellow)
                                     .padding(.top, Metrics.sm)
                             }
-                            .listRowBackground(Theme.navy)
+                            .listRowBackground(MTVTheme.navy)
                         }
                     }
                     .listStyle(.insetGrouped)
                     .searchable(text: $filter, prompt: "Find a channel")
                 } else {
-                    ProgressView().tint(Theme.pink).frame(maxWidth: .infinity, maxHeight: .infinity)
+                    ProgressView().tint(MTVTheme.pink).frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
         }
@@ -103,18 +103,18 @@ struct ChannelsSheet: View {
                 Text(channel.icon).font(.system(size: 22)).frame(width: 30)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(channel.name)
-                        .font(Theme.label(15, weight: .bold))
-                        .foregroundStyle(on ? Theme.pink : Theme.text)
+                        .font(MTVTheme.label(15, weight: .bold))
+                        .foregroundStyle(on ? MTVTheme.pink : MTVTheme.text)
                     if channel.count >= 1 {
                         Text("\(channel.count.formatted()) videos")
-                            .font(Theme.label(12))
-                            .foregroundStyle(Theme.dim)
+                            .font(MTVTheme.label(12))
+                            .foregroundStyle(MTVTheme.dim)
                     }
                 }
                 Spacer()
                 if on {
                     Image(systemName: "dot.radiowaves.left.and.right")
-                        .foregroundStyle(Theme.pink)
+                        .foregroundStyle(MTVTheme.pink)
                 }
             }
         }
@@ -146,8 +146,8 @@ struct TimeMachineSheet: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     Text("Set the dial. Tune into the year.")
-                        .font(Theme.label(15))
-                        .foregroundStyle(Theme.dim)
+                        .font(MTVTheme.label(15))
+                        .foregroundStyle(MTVTheme.dim)
                     if let years, !years.isEmpty {
                         decadeDial(years)
                         LazyVGrid(columns: columns, spacing: 10) {
@@ -157,20 +157,20 @@ struct TimeMachineSheet: View {
                                     dismiss()
                                 } label: {
                                     Text(String(year))
-                                        .font(Theme.led(17))
-                                        .foregroundStyle(Theme.yellow)
-                                        .shadow(color: Theme.yellow.opacity(0.6), radius: 4)
+                                        .font(MTVTheme.led(17))
+                                        .foregroundStyle(MTVTheme.yellow)
+                                        .shadow(color: MTVTheme.yellow.opacity(0.6), radius: 4)
                                         .frame(maxWidth: .infinity, minHeight: 52)
                                         .background(
                                             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                                .fill(Theme.navy)
+                                                .fill(MTVTheme.navy)
                                                 .overlay(
                                                     RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                                        .strokeBorder(Theme.royal.opacity(0.6), lineWidth: 1)
+                                                        .strokeBorder(MTVTheme.royal.opacity(0.6), lineWidth: 1)
                                                 )
                                         )
                                 }
-                                .buttonStyle(PressableStyle())
+                                .buttonStyle(MTVPressableStyle())
                             }
                         }
                         Button {
@@ -181,18 +181,18 @@ struct TimeMachineSheet: View {
                             }
                         } label: {
                             Label("Surprise me from the \(decadeName(decade))", systemImage: "shuffle")
-                                .font(Theme.label(15, weight: .bold))
-                                .foregroundStyle(Theme.ink)
+                                .font(MTVTheme.label(15, weight: .bold))
+                                .foregroundStyle(MTVTheme.ink)
                                 .frame(maxWidth: .infinity, minHeight: 50)
-                                .background(Theme.yellow, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                                .background(MTVTheme.yellow, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                        .strokeBorder(Theme.ink, lineWidth: 2)
+                                        .strokeBorder(MTVTheme.ink, lineWidth: 2)
                                 )
                         }
-                        .buttonStyle(PressableStyle())
+                        .buttonStyle(MTVPressableStyle())
                     } else if years == nil {
-                        ProgressView().tint(Theme.pink).frame(maxWidth: .infinity)
+                        ProgressView().tint(MTVTheme.pink).frame(maxWidth: .infinity)
                     } else {
                         Placeholder(symbol: "clock", text: "The Time Machine is still loading. Try again in a moment.")
                     }
@@ -214,20 +214,20 @@ struct TimeMachineSheet: View {
                 ForEach(decades, id: \.self) { d in
                     let on = d == decade
                     Button {
-                        Haptics.tick()
+                        MTVHaptics.tick()
                         decade = d
                     } label: {
                         Text(decadeName(d))
-                            .font(Theme.label(15, weight: .heavy))
-                            .foregroundStyle(on ? Theme.ink : Theme.dim)
+                            .font(MTVTheme.label(15, weight: .heavy))
+                            .foregroundStyle(on ? MTVTheme.ink : MTVTheme.dim)
                             .padding(.horizontal, 16)
                             .frame(minHeight: 38)
                             .background(
-                                Capsule().fill(on ? Theme.yellow : Theme.navy)
-                                    .shadow(color: on ? Theme.yellow.opacity(0.6) : .clear, radius: 8)
+                                Capsule().fill(on ? MTVTheme.yellow : MTVTheme.navy)
+                                    .shadow(color: on ? MTVTheme.yellow.opacity(0.6) : .clear, radius: 8)
                             )
                     }
-                    .buttonStyle(PressableStyle())
+                    .buttonStyle(MTVPressableStyle())
                 }
             }
         }
@@ -258,20 +258,20 @@ struct SearchSheet: View {
                     } label: {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(track.title)
-                                .font(Theme.label(15, weight: .bold))
-                                .foregroundStyle(Theme.text)
+                                .font(MTVTheme.label(15, weight: .bold))
+                                .foregroundStyle(MTVTheme.text)
                             Text(track.artist)
-                                .font(Theme.label(13))
-                                .foregroundStyle(Theme.salmon)
+                                .font(MTVTheme.label(13))
+                                .foregroundStyle(MTVTheme.salmon)
                         }
                     }
-                    .listRowBackground(Theme.navy)
+                    .listRowBackground(MTVTheme.navy)
                 }
             }
             .listStyle(.plain)
             .overlay {
                 if searching && results.isEmpty {
-                    ProgressView().tint(Theme.pink)
+                    ProgressView().tint(MTVTheme.pink)
                 } else if results.isEmpty {
                     Placeholder(
                         symbol: "magnifyingglass",
@@ -312,10 +312,10 @@ struct SavedSheet: View {
                                 dismiss()
                             } label: {
                                 Label("Play all \(videos.count)", systemImage: "play.fill")
-                                    .font(Theme.label(15, weight: .bold))
-                                    .foregroundStyle(Theme.pink)
+                                    .font(MTVTheme.label(15, weight: .bold))
+                                    .foregroundStyle(MTVTheme.pink)
                             }
-                            .listRowBackground(Theme.navy)
+                            .listRowBackground(MTVTheme.navy)
                         }
                         Section {
                             ForEach(Array(videos.enumerated()), id: \.offset) { index, video in
@@ -325,15 +325,15 @@ struct SavedSheet: View {
                                 } label: {
                                     HStack(spacing: 12) {
                                         Text("\(index + 1)")
-                                            .font(Theme.led(13))
-                                            .foregroundStyle(Theme.dim)
+                                            .font(MTVTheme.led(13))
+                                            .foregroundStyle(MTVTheme.dim)
                                             .frame(width: 26)
                                         Text(video.title.isEmpty ? "Video \(index + 1)" : video.title)
-                                            .font(Theme.label(15, weight: .semibold))
-                                            .foregroundStyle(Theme.text)
+                                            .font(MTVTheme.label(15, weight: .semibold))
+                                            .foregroundStyle(MTVTheme.text)
                                     }
                                 }
-                                .listRowBackground(Theme.navy)
+                                .listRowBackground(MTVTheme.navy)
                             }
                             .onDelete { offsets in
                                 for index in offsets.sorted(by: >) { player.removeSaved(at: index) }
@@ -341,12 +341,12 @@ struct SavedSheet: View {
                             }
                         } footer: {
                             Text("Tap ♥ Save on the remote to add the video that's playing. Swipe left to remove.")
-                                .foregroundStyle(Theme.dim)
+                                .foregroundStyle(MTVTheme.dim)
                         }
                     }
                     .listStyle(.insetGrouped)
                 } else if videos == nil {
-                    ProgressView().tint(Theme.pink).frame(maxWidth: .infinity, maxHeight: .infinity)
+                    ProgressView().tint(MTVTheme.pink).frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     Placeholder(symbol: "heart", text: "Nothing saved yet.\nTap ♥ Save on the remote to keep a video.")
                 }
@@ -358,27 +358,27 @@ struct SavedSheet: View {
 
 // MARK: About
 
-struct AboutView: View {
+struct MTVAboutView: View {
     var body: some View {
         SheetFrame(title: "About", detents: [.large]) {
             ScrollView {
                 VStack(spacing: 18) {
                     AppIconImage(size: 96)
                     Wordmark(size: 22)
-                    Text(MTVRewindInfo.buildLabel)
-                        .font(Theme.label(13))
-                        .foregroundStyle(Theme.dim)
+                    Text(BuildInfo.label)
+                        .font(MTVTheme.label(13))
+                        .foregroundStyle(MTVTheme.dim)
                     Text(
                         "An unofficial app for MTV Rewind (wantmymtv.org): 113,000+ music videos, 24/7, no ads. "
                             + "Every channel, list and video comes from the site, and the videos play from YouTube. "
                             + "Video info by IMVDb."
                     )
-                    .font(Theme.label(15))
-                    .foregroundStyle(Theme.text)
+                    .font(MTVTheme.label(15))
+                    .foregroundStyle(MTVTheme.text)
                     .multilineTextAlignment(.center)
                     Text("Not made by or affiliated with wantmymtv.org, MTV or Paramount.")
-                        .font(Theme.label(13))
-                        .foregroundStyle(Theme.dim)
+                        .font(MTVTheme.label(13))
+                        .foregroundStyle(MTVTheme.dim)
                         .multilineTextAlignment(.center)
                     VStack(spacing: 10) {
                         link("Open wantmymtv.org", "https://wantmymtv.org/")
@@ -399,19 +399,19 @@ struct AboutView: View {
     }
 
     private func link(_ title: String, _ url: String) -> some View {
-        Link(destination: URL(string: url)!) {
+        Link(destination: URL(string: url) ?? URL(fileURLWithPath: "/")) {
             Text(title)
-                .font(Theme.label(15, weight: .bold))
-                .foregroundStyle(Theme.text)
+                .font(MTVTheme.label(15, weight: .bold))
+                .foregroundStyle(MTVTheme.text)
                 .frame(maxWidth: .infinity, minHeight: 48)
-                .background(Theme.navy, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .background(MTVTheme.navy, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
         }
     }
 
     private func tip(_ text: String) -> some View {
         HStack(alignment: .top, spacing: 10) {
-            Image(systemName: "sparkle").foregroundStyle(Theme.cyan)
-            Text(text).font(Theme.label(14)).foregroundStyle(Theme.dim)
+            Image(systemName: "sparkle").foregroundStyle(MTVTheme.cyan)
+            Text(text).font(MTVTheme.label(14)).foregroundStyle(MTVTheme.dim)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }

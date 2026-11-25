@@ -23,27 +23,13 @@ let package = Package(
         .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", from: "6.6.2"),
     ],
     targets: [
-        // The app: the MyRetroTVs living room with the seven decade TV sets.
+        // The whole app: the MyRetroTVs living room and decade sets, plus the
+        // MTV Rewind player (wantmymtv.org) in Sources/RetroTV/MTV.
         .target(
             name: "RetroTV",
-            dependencies: ["MTVRewind"],
             exclude: ["swiftgen.yml"],
             resources: [
                 .process("Resources"),
-            ],
-            plugins: [
-                .plugin(name: "SwiftGenPlugin", package: "SwiftGenPlugin"),
-            ]
-        ),
-        // The MTV Rewind player (wantmymtv.org), opened from the living room.
-        // Its own module, so its Theme, sheets and web view keep their names.
-        .target(
-            name: "MTVRewind",
-            exclude: ["swiftgen.yml"],
-            resources: [
-                .process("Resources"),
-                // The icon on the loading screen.
-                .copy("LaunchIcon.png"),
             ],
             plugins: [
                 .plugin(name: "SwiftGenPlugin", package: "SwiftGenPlugin"),

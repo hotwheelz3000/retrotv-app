@@ -23,4 +23,4 @@ The IPA is unsigned. Sign it when installing, for example with Signulous, Sidelo
 
 Built with [xtool](https://xtool.sh) (SwiftPM, no Xcode project) on GitHub Actions. Every push to `main` builds the IPA and publishes it as the `latest` release. The app icon is drawn by `scripts/make-app-icon.py`.
 
-The code is two targets: `Sources/RetroTV` (the app and the MyRetroTVs sets) and `Sources/MTVRewind` (the MTV Rewind player, opened from the living room through `MTVRewindScreen`).
+All the code is one target, `Sources/RetroTV`. The MTV Rewind player lives in `Sources/RetroTV/MTV`, with its types prefixed `MTV`.

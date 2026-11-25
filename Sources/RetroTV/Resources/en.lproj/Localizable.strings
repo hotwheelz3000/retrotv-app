@@ -10,3 +10,8 @@
 "effects_title" = "Picture & Sound";
 "effects_note" = "These switch the TV's own settings. Tap again to switch back.";
 "about_title" = "About";
+
+/* MTV Rewind */
+"offline_title" = "No connection";
+"offline_message" = "MTV Rewind needs the internet to play videos.\nIt'll try again when you're back online.";
+"retry" = "Retry";

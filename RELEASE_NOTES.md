@@ -1,1 +1,1 @@
-First build: MyRetroTVs and MTV Rewind in one app. Pick a decade TV set or MTV Rewind from the living room.
+Rebuilt as one app module so it signs and installs like your other apps. Same living room, decade sets and MTV Rewind.
