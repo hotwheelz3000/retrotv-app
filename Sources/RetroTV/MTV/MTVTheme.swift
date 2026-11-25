@@ -12,33 +12,34 @@ extension Color {
     }
 }
 
-/// Colors and type for the whole app: a black background with the site's
-/// MTV Rewind palette (royal blue, lilac, mustard, red, salmon, light blue, and the
-/// Enter button's pink-to-blue gradient), with chunky dark outlines.
+/// The MTV Rewind sheets' colors, mapped onto the app's own living-room palette
+/// (dark wood, cream, amber), so MTV Rewind looks like the other sets. Only its
+/// VHS title keeps the lavender.
 enum MTVTheme {
-    static let background = Color.black
-    static let royal = Color(hex: 0x2F5EB0)
-    static let deep = Color(hex: 0x224C8B)
-    static let navy = Color(hex: 0x10254D)
-    static let lilac = Color(hex: 0xD1A1D2)
-    static let yellow = Color(hex: 0xF4B940)
-    static let red = Color(hex: 0xC72E20)
-    static let salmon = Color(hex: 0xEE8887)
-    static let lightBlue = Color(hex: 0xADC9EB)
-    static let pink = Color(hex: 0xE471BF)
-    static let purple = Color(hex: 0x7D78D9)
-    static let sky = Color(hex: 0x69B0EF)
+    static let background = Theme.panel
+    static let royal = Color.white.opacity(0.4)
+    static let deep = Theme.panelHigh
+    static let navy = Theme.panelHigh
+    static let lilac = Decade.mtv.glow
+    static let yellow = Theme.amber
+    static let red = Theme.red
+    static let salmon = Theme.red
+    static let lightBlue = Theme.cream
+    static let pink = Theme.amber
+    static let purple = Theme.amber
+    static let sky = Theme.amber
     static let ink = Color(hex: 0x141420)
 
-    /// The Enter button: pink to purple to sky blue.
-    static let enter = LinearGradient(colors: [pink, purple, sky], startPoint: .leading, endPoint: .trailing)
+    static let enter = LinearGradient(
+        colors: [Theme.amber, Color(red: 0.95, green: 0.45, blue: 0.12)], startPoint: .top, endPoint: .bottom
+    )
 
-    static let panel = navy
-    static let panelHigh = deep
-    static let stroke = ink
-    static let cyan = sky
-    static let text = Color(hex: 0xF6F2EA)
-    static let dim = Color(hex: 0xF6F2EA).opacity(0.6)
+    static let panel = Theme.panel
+    static let panelHigh = Theme.panelHigh
+    static let stroke = Theme.stroke
+    static let cyan = Theme.amber
+    static let text = Theme.cream
+    static let dim = Theme.dim
 
     static func display(_ size: CGFloat) -> Font {
         .system(size: size, weight: .black, design: .rounded)

@@ -1,1 +1,1 @@
-Rebuilt as one app module so it signs and installs like your other apps. Same living room, decade sets and MTV Rewind.
+One cohesive app: MTV Rewind is now the eighth TV set, with the same screen, remote, colors and dial as the decade sets. Switch between any of the eight sets from the dial.

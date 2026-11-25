@@ -39,6 +39,8 @@ final class TVController {
     private(set) var banner: String?
     /// Bumped on every decade change, so the screen replays its switch-on flash.
     private(set) var tuneCount = 0
+    /// Set when MTV Rewind is picked on the dial: the screen hands over to that set.
+    private(set) var requestedSet: Decade?
 
     // What's on, read from the page.
     private(set) var nowTitle = ""
@@ -108,6 +110,10 @@ extension TVController {
     func tune(to decade: Decade) {
         guard decade != self.decade else { return }
         Haptics.thunk()
+        if decade.isMTV {
+            requestedSet = decade
+            return
+        }
         self.decade = decade
         UserDefaults.standard.set(decade.id, forKey: "lastDecade")
         tuneCount += 1

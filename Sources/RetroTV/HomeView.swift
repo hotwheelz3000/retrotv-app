@@ -1,10 +1,9 @@
 import SwiftUI
 
-/// The living room: all seven TV sets to pick from, plus the MTV Rewind channel.
+/// The living room: all eight TV sets to pick from (seven decades and MTV Rewind).
 struct HomeView: View {
     @State private var selected: Decade?
     @State private var showAbout = false
-    @State private var showMTV = false
     @AppStorage("lastDecade") private var lastDecadeID = ""
 
     private let columns = [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)]
@@ -18,12 +17,8 @@ struct HomeView: View {
                     if let last = Decade.with(id: lastDecadeID) {
                         ResumeCard(decade: last) { open(last) }
                     }
-                    MTVRewindCard {
-                        Haptics.thunk()
-                        showMTV = true
-                    }
                     LazyVGrid(columns: columns, spacing: 14) {
-                        ForEach(Decade.all) { decade in
+                        ForEach(Decade.sets) { decade in
                             DecadeCard(decade: decade) { open(decade) }
                         }
                     }
@@ -40,10 +35,7 @@ struct HomeView: View {
             .scrollIndicators(.hidden)
         }
         .fullScreenCover(item: $selected) { decade in
-            TVScreen(decade: decade)
-        }
-        .fullScreenCover(isPresented: $showMTV) {
-            MTVRewindScreen { showMTV = false }
+            SetScreen(start: decade)
         }
         .sheet(isPresented: $showAbout) {
             NavigationStack {
@@ -130,7 +122,7 @@ struct DecadeCard: View {
             )
         }
         .buttonStyle(PressableStyle(scale: 0.96))
-        .accessibilityLabel("The \(decade.id), \(decade.tagline)")
+        .accessibilityLabel(decade.isMTV ? "MTV Rewind, music videos 24/7" : "The \(decade.id), \(decade.tagline)")
     }
 }
 
@@ -147,7 +139,7 @@ struct ResumeCard: View {
                     Text(L10n.homeResume)
                         .font(Theme.label(12, weight: .semibold))
                         .foregroundStyle(Theme.dim)
-                    Text("Back to the \(decade.id)")
+                    Text("Back to \(decade.name)")
                         .font(Theme.display(20))
                         .foregroundStyle(Theme.cream)
                 }
@@ -175,59 +167,5 @@ struct ResumeCard: View {
             )
         }
         .buttonStyle(PressableStyle(scale: 0.97))
-    }
-}
-
-/// The eighth set: MTV Rewind (wantmymtv.org), music videos 24/7.
-struct MTVRewindCard: View {
-    let action: () -> Void
-
-    private let lilac = Color(red: 0.82, green: 0.63, blue: 0.82)
-    private let royal = Color(red: 0.18, green: 0.37, blue: 0.69)
-    private let pink = Color(red: 0.89, green: 0.44, blue: 0.75)
-    private let sky = Color(red: 0.41, green: 0.69, blue: 0.94)
-
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 14) {
-                VStack(alignment: .leading, spacing: 6) {
-                    MTVRewindLogo(size: 24)
-                    Text(L10n.homeMtvTagline)
-                        .font(Theme.label(12, weight: .medium))
-                        .foregroundStyle(Color.white.opacity(0.6))
-                        .lineLimit(2)
-                        .minimumScaleFactor(0.8)
-                }
-                Spacer(minLength: 0)
-                Image(systemName: "play.fill")
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundStyle(.white)
-                    .frame(width: 42, height: 42)
-                    .background(
-                        Circle().fill(LinearGradient(colors: [pink, sky], startPoint: .leading, endPoint: .trailing))
-                    )
-                    .shadow(color: pink.opacity(0.5), radius: 10)
-            }
-            .padding(14)
-            .background(
-                RoundedRectangle(cornerRadius: 22, style: .continuous)
-                    .fill(Color.black)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 22, style: .continuous)
-                            .fill(
-                                RadialGradient(
-                                    colors: [lilac.opacity(0.22), .clear],
-                                    center: .topLeading, startRadius: 4, endRadius: 260
-                                )
-                            )
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 22, style: .continuous)
-                            .strokeBorder(royal.opacity(0.6), lineWidth: 1)
-                    )
-            )
-        }
-        .buttonStyle(PressableStyle(scale: 0.97))
-        .accessibilityLabel("MTV Rewind, music videos 24/7")
     }
 }

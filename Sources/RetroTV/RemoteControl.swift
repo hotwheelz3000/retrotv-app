@@ -212,21 +212,23 @@ struct PillButton: View {
     }
 }
 
-/// A row of the seven decades; the current one glows.
+/// A row of every set (the seven decades and MTV Rewind); the current one glows.
 struct DecadeDial: View {
     let selected: Decade
     let onSelect: (Decade) -> Void
 
     var body: some View {
         HStack(spacing: 4) {
-            ForEach(Decade.all) { decade in
+            ForEach(Decade.sets) { decade in
                 let isOn = decade == selected
                 Button {
                     onSelect(decade)
                 } label: {
                     Text(decade.id)
-                        .font(Theme.label(14, weight: .heavy))
+                        .font(Theme.label(decade.isMTV ? 12 : 14, weight: .heavy))
                         .foregroundStyle(isOn ? Color.black : Theme.dim)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
                         .frame(maxWidth: .infinity, minHeight: 36)
                         .background(
                             Capsule(style: .continuous)
@@ -235,7 +237,7 @@ struct DecadeDial: View {
                         )
                 }
                 .buttonStyle(PressableStyle())
-                .accessibilityLabel("The \(decade.id)")
+                .accessibilityLabel(decade.name)
                 .accessibilityAddTraits(isOn ? .isSelected : [])
             }
         }

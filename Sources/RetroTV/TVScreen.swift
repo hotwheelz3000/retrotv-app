@@ -11,9 +11,12 @@ struct TVScreen: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.scenePhase) private var scenePhase
+    /// Switches to another set that isn't a decade (MTV Rewind).
+    private let onSwitch: (Decade) -> Void
 
-    init(decade: Decade) {
+    init(decade: Decade, onSwitch: @escaping (Decade) -> Void = { _ in }) {
         _controller = State(initialValue: TVController(decade: decade))
+        self.onSwitch = onSwitch
     }
 
     private var isLandscape: Bool { verticalSizeClass == .compact }
@@ -80,6 +83,9 @@ struct TVScreen: View {
             } else {
                 controller.appLeaving()
             }
+        }
+        .onChange(of: controller.requestedSet) { _, set in
+            if let set { onSwitch(set) }
         }
         .onChange(of: chromeHidden) {
             controller.overlayRemote = false

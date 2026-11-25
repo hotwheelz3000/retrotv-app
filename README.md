@@ -6,9 +6,11 @@ An unofficial iPhone app that puts two retro TV sites in one living room: [MyRet
 
 ## What's in it
 
-- **Living room:** seven drawn TV sets, one per decade from the 50s to the 2010s, an MTV Rewind card, and a "Back to the 80s" card for the last set you watched.
-- **Decade sets:** the native remote (Power, Guide, CH and VOL, Full, Shuffle, Focus, Effects, LED readout, decade dial), the guide, swipe gestures, the Picture & Sound panel, landscape and Focus mode.
-- **MTV Rewind:** the full player in its own colors, with the lavender VHS title: channels, Time Machine, search, saved videos and the remote. The back button returns to the living room.
+- **Living room:** eight drawn TV sets, one per decade from the 50s to the 2010s plus MTV Rewind, and a "Back to the 80s" card for the last set you watched.
+- **One TV screen for every set:** the picture in a glowing frame, a now-playing strip and the native remote (Power, Guide, CH and VOL, Full, the LED readout and a dial with all eight sets). Pick any set on the dial to switch without going back.
+- **Decade sets:** Shuffle, Focus, the Picture & Sound panel, the guide with years and categories, and swipes to change channels and decades.
+- **MTV Rewind:** CH changes the video, Guide opens the channels, and Years, Search and Saved open the Time Machine, search and your saved videos. Tap the heart on the strip to save a video, and swipe the picture for next or previous.
+- **Full screen and landscape:** turn the phone or tap Full for just the picture, then tap it for the remote.
 - Sound plays with the silent switch on, and MTV Rewind keeps playing with the screen locked.
 
 ## Download
@@ -23,4 +25,4 @@ The IPA is unsigned. Sign it when installing, for example with Signulous, Sidelo
 
 Built with [xtool](https://xtool.sh) (SwiftPM, no Xcode project) on GitHub Actions. Every push to `main` builds the IPA and publishes it as the `latest` release. The app icon is drawn by `scripts/make-app-icon.py`.
 
-All the code is one target, `Sources/RetroTV`. The MTV Rewind player lives in `Sources/RetroTV/MTV`, with its types prefixed `MTV`.
+All the code is one target, `Sources/RetroTV`. MTV Rewind's player and lists live in `Sources/RetroTV/MTV`, and use the app's own theme.

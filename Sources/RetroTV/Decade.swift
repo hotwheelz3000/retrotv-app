@@ -11,7 +11,8 @@ enum TVStyle {
     case flat        // 10s: thin flat panel on a stand
 }
 
-/// One of the seven TV sets on myretrotvs.com. Each lives on its own subdomain.
+/// One of the TV sets in the living room: the seven decades on myretrotvs.com (each on
+/// its own subdomain), plus MTV Rewind (wantmymtv.org) as the eighth set.
 struct Decade: Identifiable, Hashable {
     let id: String
     let years: String
@@ -21,8 +22,15 @@ struct Decade: Identifiable, Hashable {
     let glow: Color
 
     var url: URL {
-        URL(string: "https://\(id).myretrotvs.com/") ?? URL(fileURLWithPath: "/")
+        if isMTV { return URL(string: "https://wantmymtv.org/") ?? URL(fileURLWithPath: "/") }
+        return URL(string: "https://\(id).myretrotvs.com/") ?? URL(fileURLWithPath: "/")
     }
+
+    /// The MTV Rewind set, which plays music videos instead of a decade's TV.
+    var isMTV: Bool { id == Decade.mtv.id }
+
+    /// "the 80s", or "MTV Rewind".
+    var name: String { isMTV ? "MTV Rewind" : "the \(id)" }
 
     static func == (lhs: Decade, rhs: Decade) -> Bool { lhs.id == rhs.id }
     func hash(into hasher: inout Hasher) { hasher.combine(id) }
@@ -65,10 +73,21 @@ struct Decade: Identifiable, Hashable {
         ),
     ]
 
+    /// MTV Rewind: music videos 24/7, on a dark CRT with a lavender glow.
+    static let mtv = Decade(
+        id: "MTV", years: "MTV Rewind", tagline: "Music videos 24/7", style: .crt,
+        cabinet: [Color(red: 0.27, green: 0.21, blue: 0.34), Color(red: 0.11, green: 0.08, blue: 0.15)],
+        glow: Color(red: 0.66, green: 0.61, blue: 0.85)
+    )
+
+    /// Every set in the living room and on the dial: the seven decades, then MTV Rewind.
+    static let sets: [Decade] = all + [mtv]
+
     static func with(id: String) -> Decade? {
-        all.first { $0.id == id }
+        sets.first { $0.id == id }
     }
 
+    /// The next and previous decade (swipes on a decade set). MTV Rewind isn't one.
     var next: Decade? {
         guard let index = Decade.all.firstIndex(of: self), index + 1 < Decade.all.count else { return nil }
         return Decade.all[index + 1]
